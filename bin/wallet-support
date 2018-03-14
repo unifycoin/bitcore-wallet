@@ -87,14 +87,14 @@ function displayStatus(status) {
   if (!_.isEmpty(b.byAddress)) {
     console.log('  By address:');
   }
-  _.each(b.byAddress, function(item) {
+  _.each(b.byAddress, function (item) {
     console.log('    %s (%s): %s', item.address, item.path, format(item.amount, w.coin));
   });
 
   if (!_.isEmpty(status.pendingTxps)) {
     console.log("\n* Pending tx proposals");
-    _.each(status.pendingTxps, function(x) {
-      var missingSignatures = b.requiredSignatures - _.filter(_.values(b.actions), function(a) {
+    _.each(status.pendingTxps, function (x) {
+      var missingSignatures = b.requiredSignatures - _.filter(_.values(b.actions), function (a) {
         return a.type == 'accept';
       }).length;
       console.log("  [%s] %s (fee/kb %s) => %s (status: %s)", new moment(b.createdOn * 1000), format(b.amount, w.coin), format(b.feePerKb, w.coin), b.outputs[0].toAddress, missingSignatures > 0 ? 'missing ' + missingSignatures + ' signatures' : 'ready to broadcast');
@@ -118,7 +118,7 @@ function displaySendMaxInfo(info, coin) {
   if (!_.isEmpty(info.inputs)) {
     console.log('  Available UTXOs:');
   }
-  _.each(info.inputs, function(utxo) {
+  _.each(info.inputs, function (utxo) {
     console.log('    %s%s %s', format(utxo.satoshis, coin), utxo.locked ? ' (locked)' : '', utxo.confirmations > 0 ? utxo.confirmations + ' confirmations' : 'unconfirmed');
   });
 };
@@ -129,7 +129,7 @@ function displayAddresses(addresses) {
     return;
   }
   console.log('\n* Main addresses (not including change addresses)');
-  _.each(addresses, function(a) {
+  _.each(addresses, function (a) {
     console.log('  [%s] %s (%s)', moment(a.createdOn * 1000), a.address, a.path);
   });
 };
@@ -141,7 +141,7 @@ function displayHistory(history, coin) {
   }
 
   console.log("\n* Tx history")
-  _.each(history, function(tx) {
+  _.each(history, function (tx) {
     var time = moment(tx.time * 1000);
     var amount = format(tx.amount, coin);
     var confirmations = tx.confirmations || 0;

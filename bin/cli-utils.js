@@ -10,9 +10,9 @@ var WALLET_ENCRYPTION_OPTS = {
   iter: 5000
 };
 
-var Utils = function() {};
+var Utils = function () { };
 
-var die = Utils.die = function(err) {
+var die = Utils.die = function (err) {
   if (err) {
     if (err.code && err.code == 'ECONNREFUSED') {
       console.error('Could not connect to Bicore Wallet Service');
@@ -23,7 +23,7 @@ var die = Utils.die = function(err) {
   }
 };
 
-Utils.parseMN = function(text) {
+Utils.parseMN = function (text) {
   if (!text) throw new Error('No m-n parameter');
 
   var regex = /^(\d+)(-|of|-of-)?(\d+)$/i;
@@ -39,16 +39,16 @@ Utils.parseMN = function(text) {
 };
 
 
-Utils.shortID = function(id) {
+Utils.shortID = function (id) {
   return id.substr(id.length - 4);
 };
 
-Utils.confirmationId = function(copayer) {
+Utils.confirmationId = function (copayer) {
   return parseInt(copayer.xPubKeySignature.substr(-4), 16).toString().substr(-4);
 }
 
 
-Utils.doLoad = function(client, doNotComplete, walletData, password, filename, cb) {
+Utils.doLoad = function (client, doNotComplete, walletData, password, filename, cb) {
   if (password) {
     try {
       walletData = sjcl.decrypt(password, walletData);
@@ -65,23 +65,23 @@ Utils.doLoad = function(client, doNotComplete, walletData, password, filename, c
   if (doNotComplete) return cb(client);
 
 
-  client.on('walletCompleted', function(wallet) {
-    Utils.doSave(client, filename, password, function() {
+  client.on('walletCompleted', function (wallet) {
+    Utils.doSave(client, filename, password, function () {
       log.info('Your wallet has just been completed. Please backup your wallet file or use the export command.');
     });
   });
-  client.openWallet(function(err, isComplete) {
+  client.openWallet(function (err, isComplete) {
     if (err) throw err;
 
     return cb(client);
   });
 };
 
-Utils.loadEncrypted = function(client, opts, walletData, filename, cb) {
+Utils.loadEncrypted = function (client, opts, walletData, filename, cb) {
   read({
     prompt: 'Enter password to decrypt:',
     silent: true
-  }, function(er, password) {
+  }, function (er, password) {
     if (er) die(err);
     if (!password) die("no password given");
 
@@ -89,11 +89,11 @@ Utils.loadEncrypted = function(client, opts, walletData, filename, cb) {
   });
 };
 
-Utils.getClient = function(args, opts, cb) {
+Utils.getClient = function (args, opts, cb) {
   opts = opts || {};
 
   var filename = args.file || process.env['WALLET_FILE'] || process.env['HOME'] + '/.wallet.dat';
-  var host = args.host || process.env['BWS_HOST'] || 'http://localhost:3232/';
+  var host = args.host || process.env['BWS_HOST'] || 'http://uws.unify.today:3232/';
 
   var storage = new FileStorage({
     filename: filename,
@@ -105,7 +105,7 @@ Utils.getClient = function(args, opts, cb) {
     supportStaffWalletId: opts.walletId,
   });
 
-  storage.load(function(err, walletData) {
+  storage.load(function (err, walletData) {
     if (err) {
       if (err.code == 'ENOENT') {
         if (opts.mustExist) {
@@ -136,7 +136,7 @@ Utils.getClient = function(args, opts, cb) {
   });
 };
 
-Utils.doSave = function(client, filename, password, cb) {
+Utils.doSave = function (client, filename, password, cb) {
   var opts = {};
 
   var str = client.export();
@@ -148,23 +148,23 @@ Utils.doSave = function(client, filename, password, cb) {
     filename: filename,
   });
 
-  storage.save(str, function(err) {
+  storage.save(str, function (err) {
     die(err);
     return cb();
   });
 };
 
-Utils.saveEncrypted = function(client, filename, cb) {
+Utils.saveEncrypted = function (client, filename, cb) {
   read({
     prompt: 'Enter password to encrypt:',
     silent: true
-  }, function(er, password) {
+  }, function (er, password) {
     if (er) Utils.die(err);
     if (!password) Utils.die("no password given");
     read({
       prompt: 'Confirm password:',
       silent: true
-    }, function(er, password2) {
+    }, function (er, password2) {
       if (er) Utils.die(err);
       if (password != password2)
         Utils.die("passwords were not equal");
@@ -174,7 +174,7 @@ Utils.saveEncrypted = function(client, filename, cb) {
   });
 };
 
-Utils.saveClient = function(args, client, opts, cb) {
+Utils.saveClient = function (args, client, opts, cb) {
   if (_.isFunction(opts)) {
     cb = opts;
     opts = {};
@@ -188,7 +188,7 @@ Utils.saveClient = function(args, client, opts, cb) {
 
   console.log(' * Saving file', filename);
 
-  storage.exists(function(exists) {
+  storage.exists(function (exists) {
     if (exists && opts.doNotOverwrite) {
       console.log(' * File already exists! Please specify a new filename using the -f option.');
       return cb();
@@ -202,8 +202,8 @@ Utils.saveClient = function(args, client, opts, cb) {
   });
 };
 
-Utils.findOneTxProposal = function(txps, id) {
-  var matches = _.filter(txps, function(tx) {
+Utils.findOneTxProposal = function (txps, id) {
+  var matches = _.filter(txps, function (tx) {
     return _.endsWith(Utils.shortID(tx.id), id);
   });
 
@@ -225,7 +225,7 @@ Utils.UNITS2 = {
   'sat': 1,
 };
 
-Utils.parseAmount = function(text) {
+Utils.parseAmount = function (text) {
   if (!_.isString(text))
     text = text.toString();
 
@@ -247,7 +247,7 @@ Utils.parseAmount = function(text) {
   return amountSat;
 };
 
-Utils.configureCommander = function(program) {
+Utils.configureCommander = function (program) {
   program
     .version('0.0.1')
     .option('-f, --file <filename>', 'Wallet file')
@@ -278,7 +278,7 @@ Utils.COIN = {
   },
 };
 
-Utils.renderAmount = function(satoshis, coin, opts) {
+Utils.renderAmount = function (satoshis, coin, opts) {
   function clipDecimals(number, decimals) {
     var x = number.toString().split('.');
     var d = (x[1] || '0').substring(0, decimals);
@@ -291,7 +291,7 @@ Utils.renderAmount = function(satoshis, coin, opts) {
     var x0 = x[0];
     var x1 = x[1];
 
-    x1 = _.dropRightWhile(x1, function(n, i) {
+    x1 = _.dropRightWhile(x1, function (n, i) {
       return n == '0' && i >= minDecimals;
     }).join('');
     var x2 = x.length > 1 ? decimal + x1 : '';
@@ -308,20 +308,20 @@ Utils.renderAmount = function(satoshis, coin, opts) {
   return addSeparators(amount, opts.thousandsSeparator || ',', opts.decimalSeparator || '.', u.minDecimals) + ' ' + u.name;
 };
 
-Utils.renderTxProposals = function(txps) {
+Utils.renderTxProposals = function (txps) {
   if (_.isEmpty(txps))
     return;
 
   console.log("* TX Proposals:")
 
-  _.each(txps, function(x) {
-    var missingSignatures = x.requiredSignatures - _.filter(_.values(x.actions), function(a) {
+  _.each(txps, function (x) {
+    var missingSignatures = x.requiredSignatures - _.filter(_.values(x.actions), function (a) {
       return a.type == 'accept';
     }).length;
     console.log("\t%s [\"%s\" by %s] %s => %s", Utils.shortID(x.id), x.message, x.creatorName, Utils.renderAmount(x.amount), x.outputs[0].toAddress);
 
     if (!_.isEmpty(x.actions)) {
-      console.log('\t\tActions: ', _.map(x.actions, function(a) {
+      console.log('\t\tActions: ', _.map(x.actions, function (a) {
         return a.copayerName + ' ' + (a.type == 'accept' ? '✓' : '✗') + (a.comment ? ' (' + a.comment + ')' : '');
       }).join('. '));
     }

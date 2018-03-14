@@ -15,11 +15,11 @@ var args = program.args;
 utils.getClient(program, { mustExist: true }, function (client) {
   client.getTxHistory({}, function (err, txs) {
     if (_.isEmpty(txs))
-    return;
+      return;
 
     console.log("* TX History:")
 
-    _.each(txs, function(tx) {
+    _.each(txs, function (tx) {
       var time = moment(tx.time * 1000).fromNow();
       var amount = utils.renderAmount(tx.amount);
       var confirmations = tx.confirmations || 0;
@@ -27,13 +27,13 @@ utils.getClient(program, { mustExist: true }, function (client) {
       switch (tx.action) {
         case 'received':
           direction = '<=';
-        break;
+          break;
         case 'moved':
           direction = '==';
-        break;
+          break;
         case 'sent':
           direction = '=>';
-        break;
+          break;
       }
 
       console.log("\t%s: %s %s %s %s(%s confirmations)", time, direction, tx.action, amount, proposal, confirmations);

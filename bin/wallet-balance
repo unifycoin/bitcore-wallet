@@ -11,14 +11,14 @@ var args = program.args;
 
 
 var opts = {};
-if (program.coin) { 
-    opts.coin = program.coin
+if (program.coin) {
+  opts.coin = program.coin
 }
 
 utils.getClient(program, {
   mustExist: true
-}, function(client) {
-  client.getBalance(opts, function(err, x) {
+}, function (client) {
+  client.getBalance(opts, function (err, x) {
     utils.die(err);
     console.log('* Wallet balance %s (Locked %s)', utils.renderAmount(x.totalAmount), utils.renderAmount(x.lockedAmount));
   });

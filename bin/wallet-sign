@@ -15,7 +15,7 @@ var args = program.args;
 var txpid = args[0] || '';
 
 function processBatch(client, signatures) {
-  client.getTxProposals({}, function(err, txps) {
+  client.getTxProposals({}, function (err, txps) {
     utils.die(err);
 
     var selected = [];
@@ -33,7 +33,7 @@ function processBatch(client, signatures) {
       var sigs = _.find(signatures, { txpId: txp.id });
       if (sigs) {
         txp.signatures = sigs.signatures;
-        client.signTxProposal(txp, function(err, tx) {
+        client.signTxProposal(txp, function (err, tx) {
           utils.die(err);
           console.log('Transaction %s signed by you.', txp.id);
         });
@@ -47,10 +47,10 @@ utils.getClient(program, { mustExist: true }, function (client) {
     var inFile = JSON.parse(fs.readFileSync(program.input));
     processBatch(client, inFile);
   } else {
-    client.getTxProposals({}, function(err, txps) {
+    client.getTxProposals({}, function (err, txps) {
       utils.die(err);
       var txp = utils.findOneTxProposal(txps, txpid);
-      client.signTxProposal(txp, function(err, tx) {
+      client.signTxProposal(txp, function (err, tx) {
         utils.die(err);
         console.log('Transaction signed by you.');
       });

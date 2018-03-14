@@ -20,7 +20,7 @@ var walletName = args[0];
 var copayerName = args[2] || process.env.USER;
 var passphrase = args[3];
 var network = program.testnet ? 'testnet' : 'livenet';
-var coin  = program.coin ? program.coin : 'btc';
+var coin = program.coin ? program.coin : 'btc';
 
 var mn;
 try {
@@ -31,7 +31,7 @@ try {
 
 utils.getClient(program, {
   doNotComplete: true
-}, function(client) {
+}, function (client) {
   client.seedFromRandomWithMnemonic({
     network: network,
     passphrase: passphrase,
@@ -40,12 +40,12 @@ utils.getClient(program, {
   });
   client.createWallet(walletName, copayerName, mn[0], mn[1], {
     network: network
-  }, function(err, secret) {
+  }, function (err, secret) {
     utils.die(err);
     console.log(' * ' + _.capitalize(network) + ' Wallet Created.');
     utils.saveClient(program, client, {
       doNotOverwrite: true
-    }, function() {
+    }, function () {
       if (secret) {
         console.log('   - Secret to share:\n\t' + secret);
       }
